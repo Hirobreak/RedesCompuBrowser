@@ -43,14 +43,17 @@ public class Pantalla extends JFrame{
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.add(addressBar,BorderLayout.NORTH);
         ventana.add(scrollPane,BorderLayout.CENTER);
+        
         addressBar.addActionListener(
                 new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         try {
-                            mostrador.setPage(addressBar.getText());
+                            URL pagina = new URL(addressBar.getText());
+                            String host = pagina.getHost();
+                            String path = pagina.getPath();
+                            Request r = new Request(host,path);
+                            r.initClient();
                         } catch (MalformedURLException ex) {
-                            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -61,10 +64,13 @@ public class Pantalla extends JFrame{
                     public void hyperlinkUpdate(HyperlinkEvent e){
                         if(e.getEventType()==HyperlinkEvent.EventType.ACTIVATED){
                             try {
-                                mostrador.setPage(e.getURL().toString());
-                                addressBar.setText(e.getURL().toString());
-                            } catch (IOException ex) {
-                                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                                URL pagina = e.getURL();
+                                String host = pagina.getHost();
+                                String path = pagina.getPath();
+                                Request r = new Request(host,path);
+                                r.initClient();
+                            } catch (Exception ex) {
+                                System.out.println("Error hyperlink");
                             }
                         }
                     }

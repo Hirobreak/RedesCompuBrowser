@@ -17,6 +17,7 @@ import java.net.Socket;
  * @author Kevin
  */
 public class Request {
+    String contents;
     String host,path;
     int puerto = 80;
     DataOutputStream out;
@@ -27,7 +28,7 @@ public class Request {
         this.host = host;
         this.path = path;
     }
-         public void initClient(){
+    public void initClient(){
          try{
             sc = new Socket(InetAddress.getByName(host), puerto); /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
@@ -48,7 +49,6 @@ public class Request {
             BufferedReader br=new BufferedReader(new InputStreamReader(sc.getInputStream()));
             StringBuffer builder = new StringBuffer();
             String aux = "";
-
             while ((aux = br.readLine()) != null) {
                 builder.append(aux);
                 //builder.append(System.getProperty("line.separator"));
