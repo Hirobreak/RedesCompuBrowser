@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Conex {
 
-    final String HOST = "serebii.net";
+    final String HOST = "www.cs.bham.ac.uk";
     final int PUERTO=80;
     Socket sc;
     DataOutputStream out;
@@ -15,20 +15,22 @@ public class Conex {
         try{
             sc = new Socket(InetAddress.getByName(HOST), PUERTO); /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
-            outw.println("GET / HTTP/1.1");
-            outw.println("Host: serebii.net");
+            outw.println("GET /~tpc/testpages/ HTTP/1.1");
+            outw.println("Host: www.cs.bham.ac.uk");
             outw.println("");
             outw.flush();
-            //out = new DataOutputStream(sc.getOutputStream());
-            //in = new DataInputStream(sc.getInputStream());
-            //out.writeBytes("GET / HTTP/1.1");
-            //out.writeBytes("host: www.serebii.net");
-            //out.flush();
-            //String resultado=in.readLine();
             BufferedReader br=new BufferedReader(new InputStreamReader(sc.getInputStream()));
-            while((br.readLine()) != null){
-                System.out.println(br.readLine());
+            StringBuffer builder = new StringBuffer();
+            String aux = "";
+
+            while ((aux = br.readLine()) != null) {
+                builder.append(aux);
+                //builder.append(System.getProperty("line.separator"));
             }
+            String text = builder.toString();
+            System.out.println(text);
+            Pantalla explorador=new Pantalla(text);
+            
             sc.close();
             br.close();
         }catch(Exception e ){
@@ -39,3 +41,4 @@ public class Conex {
 
 }
 
+//System.getProperty("line.separator")
