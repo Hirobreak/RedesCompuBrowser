@@ -28,7 +28,8 @@ public class Request {
         this.host = host;
         this.path = path;
     }
-    public void initClient(){
+    public String initClient(){
+        String text = "";
          try{
             sc = new Socket(InetAddress.getByName(host), puerto); /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
@@ -53,13 +54,14 @@ public class Request {
                 builder.append(aux);
                 //builder.append(System.getProperty("line.separator"));
             }
-            String text = builder.toString();
+            text = builder.toString();
             System.out.println(text);
-            new Pantalla(text);
+            //new Pantalla(text);
             sc.close();
             br.close();
         }catch(Exception e ){
             System.out.println("Error: "+e.getMessage());
         }
+         return text;
      }
 }

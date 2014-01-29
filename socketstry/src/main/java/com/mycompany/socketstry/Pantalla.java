@@ -40,7 +40,7 @@ public class Pantalla extends JFrame{
         JFrame ventana = new JFrame("Explorador v0.3");
         ventana.setSize(800, 600);
         ventana.setVisible(true);
-        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventana.add(addressBar,BorderLayout.NORTH);
         ventana.add(scrollPane,BorderLayout.CENTER);
         
@@ -52,7 +52,7 @@ public class Pantalla extends JFrame{
                             String host = pagina.getHost();
                             String path = pagina.getPath();
                             Request r = new Request(host,path);
-                            r.initClient();
+                            mostrador.setText(r.initClient());
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -68,7 +68,7 @@ public class Pantalla extends JFrame{
                                 String host = pagina.getHost();
                                 String path = pagina.getPath();
                                 Request r = new Request(host,path);
-                                r.initClient();
+                                mostrador.setText(r.initClient());
                             } catch (Exception ex) {
                                 System.out.println("Error hyperlink");
                             }
