@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
  
  public class Conex{
  
-     final String HOST = "serebii.net";
+     final String HOST = "www.hyperlinkcode.com";
      final int PUERTO=80;
      Socket sc;
      DataOutputStream out;
@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
              sc = new Socket(InetAddress.getByName(HOST), PUERTO); /*conectar a un servidor en localhost con puerto 5000*/
              outw=new PrintWriter(sc.getOutputStream());  
              outw.println("GET / HTTP/1.1");
-             outw.println("Host: serebii.net");
+             outw.println("Host: www.hyperlinkcode.com");
              outw.println("");
              outw.flush();
              //out = new DataOutputStream(sc.getOutputStream());
