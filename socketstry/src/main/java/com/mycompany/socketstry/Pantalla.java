@@ -16,7 +16,7 @@ import javax.swing.text.html.HTMLEditorKit;
  *
  * @author user
  */
-public class Pantalla {
+public class Pantalla extends JFrame{
     
     //HTMLEditorKit kit;
     JEditorPane mostrador;
