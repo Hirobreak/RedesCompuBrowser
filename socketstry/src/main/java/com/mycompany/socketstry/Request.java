@@ -16,7 +16,7 @@ import java.net.Socket;
  *
  * @author Kevin
  */
-public class Request {
+public class Request implements PageHistory{
     String contents;
     String host,path;
     int puerto = 80;
