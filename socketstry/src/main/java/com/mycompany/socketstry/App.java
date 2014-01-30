@@ -9,6 +9,5 @@ public class App
     {
         Request conexion=new Request("www.cs.bham.ac.uk","/~tpc/testpages/");
         new Pantalla(conexion.initClient());
-        //System.out.println( "Hello World!" );
     }
 }

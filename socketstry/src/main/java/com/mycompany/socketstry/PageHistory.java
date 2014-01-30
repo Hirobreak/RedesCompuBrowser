@@ -5,7 +5,7 @@
 package com.mycompany.socketstry;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -13,4 +13,5 @@ import java.util.ArrayList;
  */
 public interface PageHistory {
     ArrayList<URL> URL_list = new ArrayList<URL>();
+    Stack<URL> url_back=new Stack<URL>();
 }

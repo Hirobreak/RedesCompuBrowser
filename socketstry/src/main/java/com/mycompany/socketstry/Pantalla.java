@@ -33,10 +33,15 @@ public class Pantalla extends JFrame implements PageHistory{
     JButton refreshButton;
     JButton backButton;
     JButton forwardButton;
+    Panel bar;
+    URL actual;
     
-    Pantalla(String str){
+    Pantalla(String str){ 
+        actual=null;
+        bar=new Panel(new FlowLayout());
         mostrador=new JEditorPane();
         addressBar = new JTextField("Type URL Here");
+        addressBar.setPreferredSize(new Dimension(500, 27));
         addressBar.setVisible(true);
         mostrador.setContentType("text/html");
         mostrador.setText(str);
@@ -47,24 +52,44 @@ public class Pantalla extends JFrame implements PageHistory{
         backButton = new JButton("<<");
         forwardButton = new JButton(">>");
         refreshButton = new JButton("Refresh");
+        
+        bar.add(addressBar);
+        bar.add(okButton);
+        bar.add(backButton);
+        bar.add(forwardButton);
+        bar.add(refreshButton);
+        
         ventana.setSize(800, 600);
         ventana.setVisible(true);
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        ventana.add(addressBar,BorderLayout.NORTH);
+        //ventana.add(addressBar,BorderLayout.NORTH);
+        ventana.add(bar, BorderLayout.NORTH);
         ventana.add(scrollPane,BorderLayout.CENTER);
         
         addressBar.addActionListener(
                 new ActionListener(){
                     public void actionPerformed(ActionEvent e){
+                        try{
+                            URL pagina = new URL(addressBar.getText());
+                        }
+                        catch(MalformedURLException ex){
+                            addressBar.setText("http://" + addressBar.getText());
+                        }
+                        
                         try {
                             URL pagina = new URL(addressBar.getText());
                             String host = pagina.getHost();
                             String path = pagina.getPath();
                             Request r = new Request(host,path);
                             mostrador.setText(r.initClient());
-                            URL_list.add(pagina);
+                            if (actual!=null){
+                                url_back.push(actual);
+                            }
+                            actual=pagina;
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                            mostrador.setText("<html> Error:"+ ex.getMessage()+ "<html>");
+                            System.out.println("Error URL");
                         }
                     }
                 }
@@ -81,7 +106,10 @@ public class Pantalla extends JFrame implements PageHistory{
                                 Request r = new Request(host,path);
                                 mostrador.setText(r.initClient());
                                 addressBar.setText(e.getURL().toString());
-                                URL_list.add(pagina);
+                                if (actual!=null){
+                                    url_back.push(actual);
+                                }
+                                actual=pagina;
                             } catch (Exception ex) {
                                 System.out.println("Error hyperlink");
                             }
@@ -92,7 +120,17 @@ public class Pantalla extends JFrame implements PageHistory{
                 
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-              try {
+                try{
+                    URL pagina = new URL(addressBar.getText());
+                }
+                catch(MalformedURLException ex){
+                    addressBar.setText("http://" + addressBar.getText());
+                }
+                try {
+                    if (actual!=null){
+                        url_back.push(actual);
+                    }
+                    actual=new URL(addressBar.getText());
                     pageGo(new URL(addressBar.getText()));
                 } catch (MalformedURLException ex) {
                     Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,12 +151,12 @@ public class Pantalla extends JFrame implements PageHistory{
         
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            /*    try { //USAR URL_list-1
-                    pageBack(new URL(addressBar.getText()));
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            */
+            if(!url_back.empty()){
+                pageGo(url_back.pop());
+            }else{
+                mostrador.setText("<html> Start Site <html>");
+            }
+
         }
         });
         

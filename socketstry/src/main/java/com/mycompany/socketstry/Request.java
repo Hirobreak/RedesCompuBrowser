@@ -55,7 +55,7 @@ public class Request implements PageHistory{
                 //builder.append(System.getProperty("line.separator"));
             }
             text = builder.toString();
-            System.out.println(text);
+            //System.out.println(text);
             //new Pantalla(text);
             sc.close();
             br.close();
