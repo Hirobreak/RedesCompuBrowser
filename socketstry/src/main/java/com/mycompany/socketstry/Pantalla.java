@@ -129,10 +129,10 @@ public class Pantalla extends JFrame implements PageHistory{
                         
                         try {
                             URL pagina = new URL(addressBar.getText());
-                            pageGo(pagina);
                             if (actual!=null){
                                 url_back.push(actual);
                             }
+                            pageGo(pagina);
                             refreshButtons();
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
@@ -149,10 +149,10 @@ public class Pantalla extends JFrame implements PageHistory{
                         if(e.getEventType()==HyperlinkEvent.EventType.ACTIVATED){
                             try {
                                 URL pagina = e.getURL();
-                                pageGo(pagina);
                                 if (actual!=null){
                                     url_back.push(actual);
                                 }
+                                pageGo(pagina);
                                 refreshButtons();
                             } catch (Exception ex) {
                                 System.out.println("Error hyperlink");
@@ -196,7 +196,11 @@ public class Pantalla extends JFrame implements PageHistory{
         homeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    if (actual!=null){
+                        url_back.push(actual);
+                    }
                     pageGo(homepage);
+                    refreshButtons();
                 } catch (Exception ex) {
                     Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -212,7 +216,6 @@ public class Pantalla extends JFrame implements PageHistory{
             }else{
                 mostrador.setText("<html> Start Site <html>");
             }
-
         }
         });
         
@@ -234,8 +237,10 @@ public class Pantalla extends JFrame implements PageHistory{
         Request r = new Request(host,path);
         mostrador.setText(r.initClient());
         addressBar.setText(gotoURL.toString());
-        actual = gotoURL;
-        url_history.add(gotoURL);
+        if(actual != gotoURL){
+            actual = gotoURL;
+            url_history.add(gotoURL);
+        }
         refreshButtons();
     }
     public void refreshButtons(){

@@ -1,0 +1,23 @@
+1. http://www.serebii.net/index2.shtml -- inicio
+2. http://sheldonbrown.com/web_sample1.html -- addressbar enter
+3. http://www.serebii.net/index2.shtml - home
+4. http://www.cs.bham.ac.uk/~tpc/testpages/ - addressbar go
+5. http://www.cs.bham.ac.uk/~tpc/testpages/page1.html -- hyperlink (el primero)
+6. http://www.cs.bham.ac.uk/~tpc/testpages/page1.html -- refresh
+7. http://www.serebii.net/index2.shtml -- home
+8. http://sheldonbrown.com/web_sample1.html -- addressbar enter
+9. http://sheldonbrown.com/web_sample1.html -- refresh
+
+back 1: se salta 8, directo a 7
+back 2: se salta 6, directo a 5
+back 3: 4
+back 4: 3
+back 5: 2
+back 6: 1 (back disabled)
+
+forward 1: 2
+forward 2: 3
+forward 3: 4
+forward 4: 5
+forward 5: 6
+forward 6: 8 (forward disabled)
