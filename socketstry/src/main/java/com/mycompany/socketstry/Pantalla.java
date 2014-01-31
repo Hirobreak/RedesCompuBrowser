@@ -11,8 +11,10 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -33,10 +35,17 @@ public class Pantalla extends JFrame implements PageHistory{
     JButton refreshButton;
     JButton backButton;
     JButton forwardButton;
+    JButton homeButton;
     Panel bar;
     URL actual;
+    URL homepage;
+    MenuBar menu = new MenuBar();
+    Menu options = new Menu("Opciones");
+    MenuItem cambiarHome = new MenuItem("Cambiar homepage");
+    MenuItem mostrarHist = new MenuItem("Mostrar historial");
+    MenuItem cerrarBrowser = new MenuItem("Cerrar");
     
-    Pantalla(String str){ 
+    Pantalla(String str) throws IOException{ 
         actual=null;
         bar=new Panel(new FlowLayout());
         mostrador=new JEditorPane();
@@ -48,23 +57,65 @@ public class Pantalla extends JFrame implements PageHistory{
         JScrollPane scrollPane = new JScrollPane(mostrador);
         mostrador.setEditable(false);
         JFrame ventana = new JFrame("Explorador v0.3");
-        okButton = new JButton("Go");
-        backButton = new JButton("<<");
-        forwardButton = new JButton(">>");
-        refreshButton = new JButton("Refresh");
+        
+        homeButton = new JButton();
+        ImageIcon homeIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/home.jpg"))); 
+        homeButton.setIcon(homeIcon);
+        
+        okButton = new JButton();
+        ImageIcon goIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/go.jpg"))); 
+        okButton.setIcon(goIcon);
+        
+        backButton = new JButton();
+        ImageIcon backIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/back.jpg"))); 
+        backButton.setIcon(backIcon);
+        
+        forwardButton = new JButton();
+        ImageIcon forwardIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/forward.jpg"))); 
+        forwardButton.setIcon(forwardIcon);
+        
+        refreshButton = new JButton();
+        ImageIcon refreshIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/refresh.jpg"))); 
+        refreshButton.setIcon(refreshIcon);
+        
         refreshButtons();
+        options.add(cambiarHome);
+        options.add(mostrarHist);
+        options.add(cerrarBrowser);
+        menu.add(options);
+        bar.add(homeButton);
         bar.add(addressBar);
         bar.add(okButton);
         bar.add(backButton);
         bar.add(forwardButton);
         bar.add(refreshButton);
         
-        ventana.setSize(800, 600);
+        ventana.setSize(1024, 600);
         ventana.setVisible(true);
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //ventana.add(addressBar,BorderLayout.NORTH);
+        ventana.setMenuBar(menu);
         ventana.add(bar, BorderLayout.NORTH);
         ventana.add(scrollPane,BorderLayout.CENTER);
+        
+        cambiarHome.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("me da pereza hacer esto"); // hacer en jframe aparte
+            }
+        });
+        
+        mostrarHist.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Historial de paginas:"); // hacer en jframe aparte
+                for(String url : guardarHist())
+                    System.out.println(url);
+            }
+        });
+        
+        cerrarBrowser.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
         
         addressBar.addActionListener(
                 new ActionListener(){
@@ -82,7 +133,6 @@ public class Pantalla extends JFrame implements PageHistory{
                             if (actual!=null){
                                 url_back.push(actual);
                             }
-                            actual=pagina;
                             refreshButtons();
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +153,6 @@ public class Pantalla extends JFrame implements PageHistory{
                                 if (actual!=null){
                                     url_back.push(actual);
                                 }
-                                actual=pagina;
                                 refreshButtons();
                             } catch (Exception ex) {
                                 System.out.println("Error hyperlink");
@@ -125,7 +174,6 @@ public class Pantalla extends JFrame implements PageHistory{
                     if (actual!=null){
                         url_back.push(actual);
                     }
-                    actual=new URL(addressBar.getText());
                     pageGo(new URL(addressBar.getText()));
                     refreshButtons();
                 } catch (MalformedURLException ex) {
@@ -136,12 +184,23 @@ public class Pantalla extends JFrame implements PageHistory{
         
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            /*    try {// USAR URL ACTUAL
-                    pageRefresh(new URL(addressBar.getText()));
-                } catch (MalformedURLException ex) {
+                try {
+                    pageGo(actual);
+                } catch (Exception ex) {
                     Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            */
+            
+        }
+        });
+        
+        homeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    pageGo(homepage);
+                } catch (Exception ex) {
+                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
         }
         });
         
@@ -167,39 +226,30 @@ public class Pantalla extends JFrame implements PageHistory{
             */
         }
         });
-        //add(addressBar,BorderLayout.NORTH);
     }
-    public void pageBack(URL previousURL){
-        String host = previousURL.getHost();
-        String path = previousURL.getPath();
-        Request r = new Request(host,path);
-        mostrador.setText(r.initClient());
-    }
-    public void pageForward(URL nextURL){
-        String host = nextURL.getHost();
-        String path = nextURL.getPath();
-        Request r = new Request(host,path);
-        mostrador.setText(r.initClient());
-    }
-    public void pageRefresh(URL currentURL){
-        String host = currentURL.getHost();
-        String path = currentURL.getPath();
-        Request r = new Request(host,path);
-        mostrador.setText(r.initClient());
-    }
+
     public void pageGo(URL gotoURL){
         String host = gotoURL.getHost();
         String path = gotoURL.getPath();
         Request r = new Request(host,path);
         mostrador.setText(r.initClient());
         addressBar.setText(gotoURL.toString());
+        actual = gotoURL;
+        url_history.add(gotoURL);
         refreshButtons();
-        URL_list.add(gotoURL);
     }
     public void refreshButtons(){
         if(url_back.empty())
             backButton.setEnabled(false);
         else
             backButton.setEnabled(true);
+    }
+    
+    public ArrayList<String> guardarHist(){
+        ArrayList<String> hist = new ArrayList<String>();
+        for(URL u : url_history){
+            hist.add(u.toString());
+        }
+        return hist;
     }
 }
