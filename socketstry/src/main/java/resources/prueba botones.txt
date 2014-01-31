@@ -21,3 +21,5 @@ forward 3: 4
 forward 4: 5
 forward 5: 7
 forward 6: 8 (forward disabled)
+
+historial: 1 2 3 4 5 7 8

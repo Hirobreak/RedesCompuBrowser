@@ -132,7 +132,9 @@ public class Pantalla extends JFrame implements PageHistory{
                             if (actual!=null){
                                 url_back.push(actual);
                             }
-                            pageGo(pagina,false);
+                            if(pagina!=actual)
+                                url_history.add(pagina);
+                            pageGo(pagina);
                             refreshButtons();
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,7 +154,9 @@ public class Pantalla extends JFrame implements PageHistory{
                                 if (actual!=null){
                                     url_back.push(actual);
                                 }
-                                pageGo(pagina,false);
+                                if(pagina!=actual)
+                                    url_history.add(pagina);
+                                pageGo(pagina);
                                 refreshButtons();
                             } catch (Exception ex) {
                                 System.out.println("Error hyperlink");
@@ -171,10 +175,13 @@ public class Pantalla extends JFrame implements PageHistory{
                     addressBar.setText("http://" + addressBar.getText());
                 }
                 try {
+                    URL pagina = new URL(addressBar.getText());
                     if (actual!=null){
                         url_back.push(actual);
                     }
-                    pageGo(new URL(addressBar.getText()),false);
+                    if(pagina!=actual)
+                        url_history.add(pagina);
+                    pageGo(pagina);
                     refreshButtons();
                 } catch (MalformedURLException ex) {
                     Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
@@ -185,7 +192,7 @@ public class Pantalla extends JFrame implements PageHistory{
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    pageGo(actual,false);
+                    pageGo(actual);
                 } catch (Exception ex) {
                     Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -199,7 +206,9 @@ public class Pantalla extends JFrame implements PageHistory{
                     if (actual!=null){
                         url_back.push(actual);
                     }
-                    pageGo(homepage,false);
+                    if(homepage!=actual)
+                        url_history.add(homepage);
+                    pageGo(homepage);
                     refreshButtons();
                 } catch (Exception ex) {
                     Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
@@ -212,7 +221,7 @@ public class Pantalla extends JFrame implements PageHistory{
             public void actionPerformed(ActionEvent e) {
             if(!url_back.empty()){
                 URL back = url_back.pop();
-                pageGo(back,true);
+                pageGo(back);
             }else{
                 mostrador.setText("<html> Start Site <html>");
             }
@@ -231,16 +240,13 @@ public class Pantalla extends JFrame implements PageHistory{
         });
     }
 
-    public void pageGo(URL gotoURL, boolean esBack){
+    public void pageGo(URL gotoURL){
         String host = gotoURL.getHost();
         String path = gotoURL.getPath();
         Request r = new Request(host,path);
         mostrador.setText(r.initClient());
         addressBar.setText(gotoURL.toString());
         actual = gotoURL;
-        if(actual != gotoURL && esBack==false){
-            url_history.add(gotoURL);
-        }
         refreshButtons();
     }
     public void refreshButtons(){
