@@ -1,4 +1,4 @@
-1. http://www.serebii.net/index2.shtml -- inicio
+1. HOMEPAGE -- inicio
 2. http://sheldonbrown.com/web_sample1.html -- addressbar enter
 3. http://www.serebii.net/index2.shtml - home
 4. http://www.cs.bham.ac.uk/~tpc/testpages/ - addressbar go

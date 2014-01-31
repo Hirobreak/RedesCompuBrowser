@@ -11,7 +11,10 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -44,6 +47,7 @@ public class Pantalla extends JFrame implements PageHistory{
     MenuItem cambiarHome = new MenuItem("Cambiar homepage");
     MenuItem mostrarHist = new MenuItem("Mostrar historial");
     MenuItem cerrarBrowser = new MenuItem("Cerrar");
+    JPanel panelHist = new JPanel();
     
     Pantalla(String str) throws IOException{ 
         actual=null;
@@ -57,6 +61,11 @@ public class Pantalla extends JFrame implements PageHistory{
         JScrollPane scrollPane = new JScrollPane(mostrador);
         mostrador.setEditable(false);
         JFrame ventana = new JFrame("Explorador v0.3");
+        final JFrame historial = new JFrame("Page history");
+        historial.setSize(800,600);
+        panelHist.setLayout(new GridLayout(100,100));
+        historial.add(panelHist,BorderLayout.NORTH);
+        historial.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
         homeButton = new JButton();
         ImageIcon homeIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/home.jpg"))); 
@@ -92,22 +101,20 @@ public class Pantalla extends JFrame implements PageHistory{
         
         ventana.setSize(1024, 600);
         ventana.setVisible(true);
-        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setMenuBar(menu);
         ventana.add(bar, BorderLayout.NORTH);
         ventana.add(scrollPane,BorderLayout.CENTER);
         
         cambiarHome.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("me da pereza hacer esto"); // hacer en jframe aparte
+                cambiarHomepage(homepage); // hacer en jframe aparte
             }
         });
         
         mostrarHist.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Historial de paginas:"); // hacer en jframe aparte
-                for(String url : guardarHist())
-                    System.out.println(url);
+                historial.setVisible(true);
             }
         });
         
@@ -132,8 +139,10 @@ public class Pantalla extends JFrame implements PageHistory{
                             if (actual!=null){
                                 url_back.push(actual);
                             }
-                            if(pagina!=actual)
+                            if(pagina!=actual){
                                 url_history.add(pagina);
+                                guardarHist(pagina);
+                            }
                             pageGo(pagina);
                             refreshButtons();
                         } catch (MalformedURLException ex) {
@@ -154,8 +163,10 @@ public class Pantalla extends JFrame implements PageHistory{
                                 if (actual!=null){
                                     url_back.push(actual);
                                 }
-                                if(pagina!=actual)
+                                if(pagina!=actual){
                                     url_history.add(pagina);
+                                    guardarHist(pagina);
+                                }
                                 pageGo(pagina);
                                 refreshButtons();
                             } catch (Exception ex) {
@@ -179,8 +190,10 @@ public class Pantalla extends JFrame implements PageHistory{
                     if (actual!=null){
                         url_back.push(actual);
                     }
-                    if(pagina!=actual)
+                    if(pagina!=actual){
                         url_history.add(pagina);
+                        guardarHist(pagina);
+                    }
                     pageGo(pagina);
                     refreshButtons();
                 } catch (MalformedURLException ex) {
@@ -206,8 +219,10 @@ public class Pantalla extends JFrame implements PageHistory{
                     if (actual!=null){
                         url_back.push(actual);
                     }
-                    if(homepage!=actual)
+                    if(homepage!=actual){
                         url_history.add(homepage);
+                        guardarHist(homepage);
+                    }
                     pageGo(homepage);
                     refreshButtons();
                 } catch (Exception ex) {
@@ -255,12 +270,48 @@ public class Pantalla extends JFrame implements PageHistory{
         else
             backButton.setEnabled(true);
     }
+
+    public void guardarHist(URL url){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        JLabel j = new JLabel(url.toString()+" - "+dateFormat.format(date));
+        panelHist.add(j);
+    }
     
-    public ArrayList<String> guardarHist(){
-        ArrayList<String> hist = new ArrayList<String>();
-        for(URL u : url_history){
-            hist.add(u.toString());
-        }
-        return hist;
+    public void cambiarHomepage(URL home){
+        final JFrame cambiarHomepage = new JFrame("Cambiar homepage");
+        cambiarHomepage.setSize(600, 100);
+        cambiarHomepage.setVisible(true);
+        Panel panelPrin=new Panel(new GridLayout(3, 1));
+        Panel panelTextField=new Panel(new FlowLayout());
+        Panel panelLabel=new Panel(new FlowLayout());
+        Panel panelboton=new Panel(new GridLayout(1, 2));
+        Label homep=new Label("Homepage:");
+        final TextField editHome=new TextField(home.toString(), 75);
+        Button guardar=new Button("Guardar");
+        Button cancelar=new Button("Cancelar");
+        panelLabel.add(homep);
+        panelTextField.add(editHome);
+        panelboton.add(guardar);
+        panelboton.add(cancelar);
+        panelPrin.add(panelLabel);
+        panelPrin.add(panelTextField);
+        panelPrin.add(panelboton);
+        cambiarHomepage.add(panelPrin);   
+        guardar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                try {
+                    homepage=new URL(editHome.getText());
+                    cambiarHomepage.dispose();
+                } catch (MalformedURLException ex) {
+                    editHome.setText("http://" + editHome.getText());
+                }
+            }
+        });
+        cancelar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                cambiarHomepage.dispose();
+            }
+        });
     }
 }
