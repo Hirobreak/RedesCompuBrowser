@@ -218,6 +218,8 @@ public class Pantalla extends JFrame implements PageHistory{
                     if(homepage!=actual && actual!=null){
                         url_history.add(homepage);
                         guardarHist(homepage);
+                        //addListenerHistButton(j);
+                        //panelHist.add(j);
                         url_back.push(actual);
                     }
                     pageGo(homepage);
@@ -277,10 +279,40 @@ public class Pantalla extends JFrame implements PageHistory{
     public void guardarHist(URL url){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        JLabel j = new JLabel(url.toString()+" - "+dateFormat.format(date));
-        panelHist.add(j);
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        JButton j = new JButton(url.toString());
+        JLabel dateLabel = new JLabel(dateFormat.format(date));
+        addListenerHistButton(j);
+        panel.add(j);
+        panel.add(dateLabel);
+        panelHist.add(panel);
     }
     
+    public void addListenerHistButton(final JButton histButton){
+        histButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    URL urlButton = new URL(histButton.getText());
+                    System.out.println("histButton: "+histButton.getText()+" actual: "+actual.toString());
+                    if(!urlButton.toString().equals(actual.toString()) && actual!=null){
+                        url_history.add(urlButton);
+                        guardarHist(urlButton);
+                        url_back.push(actual);
+                    }
+                    pageGo(urlButton);
+                    refreshButtons();
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+
+                } catch (Exception ex) {
+                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
+        });
+    }
     public void cambiarHomepage(URL home){
         final JFrame cambiarHomepage = new JFrame("Cambiar homepage");
         cambiarHomepage.setSize(600, 100);
