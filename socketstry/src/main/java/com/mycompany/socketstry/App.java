@@ -13,6 +13,6 @@ public class App implements PageHistory
         Request conexion=new Request(homepage.getHost(),homepage.getPath());
         url_history.add(homepage); 
         Pantalla browser = new Pantalla(conexion.initClient());
-        browser.actual = homepage; browser.homepage = homepage; browser.guardarHist(homepage);
+        browser.actual = homepage; browser.homepage = homepage; browser.guardarHist(homepage); browser.addressBar.setText(homepage.toString());
     }
 }

@@ -53,7 +53,7 @@ public class Pantalla extends JFrame implements PageHistory{
         actual=null;
         bar=new Panel(new FlowLayout());
         mostrador=new JEditorPane();
-        addressBar = new JTextField("Type URL Here");
+        addressBar = new JTextField();
         addressBar.setPreferredSize(new Dimension(500, 27));
         addressBar.setVisible(true);
         mostrador.setContentType("text/html");
@@ -70,22 +70,27 @@ public class Pantalla extends JFrame implements PageHistory{
         homeButton = new JButton();
         ImageIcon homeIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/home.jpg"))); 
         homeButton.setIcon(homeIcon);
+        homeButton.setToolTipText("Go to homepage");
         
         okButton = new JButton();
         ImageIcon goIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/go.jpg"))); 
         okButton.setIcon(goIcon);
+        okButton.setToolTipText("Go to specified address");
         
         backButton = new JButton();
         ImageIcon backIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/back.jpg"))); 
         backButton.setIcon(backIcon);
+        backButton.setToolTipText("Go to previous page");
         
         forwardButton = new JButton();
         ImageIcon forwardIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/forward.jpg"))); 
         forwardButton.setIcon(forwardIcon);
+        forwardButton.setToolTipText("Go to next page");
         
         refreshButton = new JButton();
         ImageIcon refreshIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/refresh.jpg"))); 
         refreshButton.setIcon(refreshIcon);
+        refreshButton.setToolTipText("Reload current page");
         
         refreshButtons();
         options.add(cambiarHome);
@@ -136,10 +141,8 @@ public class Pantalla extends JFrame implements PageHistory{
                         
                         try {
                             URL pagina = new URL(addressBar.getText());
-                            if (actual!=null){
+                            if(pagina!=actual && actual!=null){
                                 url_back.push(actual);
-                            }
-                            if(pagina!=actual){
                                 url_history.add(pagina);
                                 guardarHist(pagina);
                             }
@@ -160,10 +163,8 @@ public class Pantalla extends JFrame implements PageHistory{
                         if(e.getEventType()==HyperlinkEvent.EventType.ACTIVATED){
                             try {
                                 URL pagina = e.getURL();
-                                if (actual!=null){
+                                if(pagina!=actual && actual!=null){
                                     url_back.push(actual);
-                                }
-                                if(pagina!=actual){
                                     url_history.add(pagina);
                                     guardarHist(pagina);
                                 }
@@ -187,10 +188,8 @@ public class Pantalla extends JFrame implements PageHistory{
                 }
                 try {
                     URL pagina = new URL(addressBar.getText());
-                    if (actual!=null){
+                    if(pagina!=actual && actual!=null){
                         url_back.push(actual);
-                    }
-                    if(pagina!=actual){
                         url_history.add(pagina);
                         guardarHist(pagina);
                     }
@@ -216,12 +215,10 @@ public class Pantalla extends JFrame implements PageHistory{
         homeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (actual!=null){
-                        url_back.push(actual);
-                    }
-                    if(homepage!=actual){
+                    if(homepage!=actual && actual!=null){
                         url_history.add(homepage);
                         guardarHist(homepage);
+                        url_back.push(actual);
                     }
                     pageGo(homepage);
                     refreshButtons();
@@ -236,6 +233,7 @@ public class Pantalla extends JFrame implements PageHistory{
             public void actionPerformed(ActionEvent e) {
             if(!url_back.empty()){
                 URL back = url_back.pop();
+                url_forward.push(actual);
                 pageGo(back);
             }else{
                 mostrador.setText("<html> Start Site <html>");
@@ -245,12 +243,13 @@ public class Pantalla extends JFrame implements PageHistory{
         
         forwardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            /*    try { //USAR URL_list+1
-                    pageBack(new URL(addressBar.getText()));
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            */
+            if(!url_forward.empty()){
+                URL forward = url_forward.pop();
+                url_back.push(actual);
+                pageGo(forward);
+            }else{
+                mostrador.setText("<html> End Site <html>");
+            }
         }
         });
     }
@@ -269,6 +268,10 @@ public class Pantalla extends JFrame implements PageHistory{
             backButton.setEnabled(false);
         else
             backButton.setEnabled(true);
+        if(url_forward.empty())
+            forwardButton.setEnabled(false);
+        else
+            forwardButton.setEnabled(true);
     }
 
     public void guardarHist(URL url){

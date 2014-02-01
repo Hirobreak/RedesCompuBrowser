@@ -52,11 +52,8 @@ public class Request implements PageHistory{
             String aux = "";
             while ((aux = br.readLine()) != null) {
                 builder.append(aux);
-                //builder.append(System.getProperty("line.separator"));
             }
             text = builder.toString();
-            //System.out.println(text);
-            //new Pantalla(text);
             sc.close();
             br.close();
         }catch(Exception e ){
