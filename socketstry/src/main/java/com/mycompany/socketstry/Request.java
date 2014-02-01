@@ -50,10 +50,17 @@ public class Request implements PageHistory{
             BufferedReader br=new BufferedReader(new InputStreamReader(sc.getInputStream()));
             StringBuffer builder = new StringBuffer();
             String aux = "";
+            int count=0;
             while ((aux = br.readLine()) != null) {
-                builder.append(aux);
+                if (aux.isEmpty()){
+                    count=1;
+                }
+                if (count==1){
+                    builder.append(aux);
+                }
             }
             text = builder.toString();
+            //System.out.println(text);
             sc.close();
             br.close();
         }catch(Exception e ){

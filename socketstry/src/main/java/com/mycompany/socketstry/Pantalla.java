@@ -62,10 +62,12 @@ public class Pantalla extends JFrame implements PageHistory{
         mostrador.setEditable(false);
         JFrame ventana = new JFrame("Explorador v0.3");
         final JFrame historial = new JFrame("Page history");
-        historial.setSize(800,600);
-        panelHist.setLayout(new GridLayout(100,100));
-        historial.add(panelHist,BorderLayout.NORTH);
+        historial.setSize(825,600);
+        panelHist.setLayout(new GridLayout(100,0));
+        JScrollPane scrollhist = new JScrollPane(panelHist);
+        historial.add(scrollhist);
         historial.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        
         
         homeButton = new JButton();
         ImageIcon homeIcon = new ImageIcon(ImageIO.read(new File("../socketstry/src/main/java/resources/home.jpg"))); 
