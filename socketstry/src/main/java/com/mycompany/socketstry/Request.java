@@ -14,10 +14,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
 
-/**
- *
- * @author Kevin
- */
 public class Request implements PageHistory{
     String contents;
     String host,path;
@@ -37,7 +33,7 @@ public class Request implements PageHistory{
          try{
             sc = new Socket(InetAddress.getByName(host), puerto); /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
-            System.out.println("AQUI ESTA EL URL : "+host+path + " pathlength="+path.length());
+            System.out.println("URL: "+host+path + " pathlength="+path.length());
             if (path==""){
                 System.out.println("GET / HTTP/1.1");
                 outw.println("GET / HTTP/1.1");

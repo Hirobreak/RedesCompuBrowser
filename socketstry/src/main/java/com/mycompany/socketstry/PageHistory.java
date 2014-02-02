@@ -12,7 +12,6 @@ import java.util.*;
  * @author Kevin
  */
 public interface PageHistory {
-    ArrayList<URL> url_history = new ArrayList<URL>();
     Stack<URL> url_back=new Stack<URL>();
     Stack<URL> url_forward = new Stack<URL>();
     

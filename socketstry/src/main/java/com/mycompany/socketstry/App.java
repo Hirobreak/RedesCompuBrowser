@@ -11,7 +11,6 @@ public class App implements PageHistory
     {
         URL homepage = new URL("http://sheldonbrown.com/web_sample1.html");
         Request conexion=new Request(homepage.getHost(),homepage.getPath());
-        url_history.add(homepage); 
         Pantalla browser = new Pantalla(conexion.initClient());
         browser.actual = homepage; browser.homepage = homepage; browser.guardarHist(homepage); browser.addressBar.setText(homepage.toString());
     }
