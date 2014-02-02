@@ -58,8 +58,9 @@ public class Pantalla extends JFrame implements PageHistory{
         addressBar.setVisible(true);
         mostrador.setContentType("text/html");
         mostrador.setText(str);
-        JScrollPane scrollPane = new JScrollPane(mostrador);
+        final JScrollPane scrollPane = new JScrollPane(mostrador);
         mostrador.setEditable(false);
+        
         JFrame ventana = new JFrame("Explorador v0.3");
         final JFrame historial = new JFrame("Page history");
         historial.setSize(825,600);
@@ -171,10 +172,12 @@ public class Pantalla extends JFrame implements PageHistory{
                                     guardarHist(pagina);
                                 }
                                 pageGo(pagina);
+                                System.out.println(e.getDescription());
                                 refreshButtons();
                             } catch (Exception ex) {
                                 System.out.println("Error hyperlink");
                             }
+                            
                         }
                     }
                 }
