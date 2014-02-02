@@ -27,9 +27,9 @@ public class Request implements PageHistory{
         this.path = path;
     }
     public String initClient(){
-        String text = "";
+        String text = null;
         int estado=0;
-        String locat="";
+        String locat=null;
          try{
             sc = new Socket(InetAddress.getByName(host), puerto); /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
@@ -54,29 +54,62 @@ public class Request implements PageHistory{
             int count=0;
             for (int i=0; i<4; i++){
                 aux=br.readLine();
+                System.out.println("wwww");
                 if(i==0){
                     System.out.println(aux);
+                    System.out.println("000000");
                     estado=Character.getNumericValue(aux.charAt(9))*100+Character.getNumericValue(aux.charAt(10))*10+Character.getNumericValue(aux.charAt(11));
                 }else if(i==3){
                     System.out.println(aux);
-                    locat=aux.toString();
-                }else{
+                    System.out.println("33333");
+                   // locat=aux.toString();
+                }else if (i==2){
                     System.out.println(aux);
+                    System.out.println("22222");  
+                }
+                else{
+                    System.out.println(aux);
+                    System.out.println("i else "+i+"");                   
                 }    
             }
             while ((aux = br.readLine()) != null) {
                 if (aux.isEmpty()){
                     count=1;
+                    System.out.println("aux is empty"); 
                 }
                 if (count==1){
                     builder.append(aux);
+                    System.out.println("aux append"); 
                 }
                 if (count==0){
                     System.out.println(aux);
+                    if (aux.contains("Location")){
+                     
+                     System.out.println(aux);
+                      
+                     int j = 0;
+                     char h = 'h';
+                     
+                     while (aux.charAt(j)!= aux.charAt(aux.length()-1)){
+                         if (aux.charAt(j)==h){
+                         locat=aux.substring(j);
+                         }
+                     
+                     j=j+1;
+                     }
+                     System.out.println("aqui esta"); 
+                     System.out.println(locat);
+                     System.out.println("viste pedro");
+                    }
+                     System.out.println("print aux tt"); 
+                    
                 }
             }
+            
             text = builder.toString();
+            System.out.println("print estadi init"); 
             System.out.println(estado);
+            System.out.println("print estadi fin");
             sc.close();
             br.close();
         }catch(Exception e ){
@@ -90,10 +123,12 @@ public class Request implements PageHistory{
                 "</BODY>\n" +
                 "</HTML>";
         }
+         
+         
         if(estado>=300 && estado<=399){
             text="<HTML>\n" +
                 "<HEAD>\n" +
-                "<TITLE>Error Indeterminado</TITLE>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
                 "</HEAD>\n" +
                 "<BODY>\n" +
                 "<P>We are sorry, the page you are trying to load has moved to "+locat +".</P>\n" +
@@ -103,10 +138,10 @@ public class Request implements PageHistory{
         if(estado>=400 && estado<=499){
             text="<HTML>\n" +
                 "<HEAD>\n" +
-                "<TITLE>Error Indeterminado</TITLE>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
                 "</HEAD>\n" +
                 "<BODY>\n" +
-                "<P>We are sorry, Error 404, page not found.</P>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
                 "</BODY>\n" +
                 "</HTML>";
         }
