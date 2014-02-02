@@ -22,6 +22,7 @@ public class Request implements PageHistory{
     DataInputStream in;
     PrintWriter outw;
     Socket sc;
+    boolean redirect= false;
     Request(String host, String path){
         this.host = host;
         this.path = path;
@@ -30,7 +31,9 @@ public class Request implements PageHistory{
         String text = null;
         int estado=0;
         String locat=null;
+        
          try{
+             
             sc = new Socket(InetAddress.getByName(host), puerto); /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
             System.out.println("URL: "+host+path + " pathlength="+path.length());
@@ -54,38 +57,38 @@ public class Request implements PageHistory{
             int count=0;
             for (int i=0; i<4; i++){
                 aux=br.readLine();
-                System.out.println("wwww");
+               // System.out.println("wwww");
                 if(i==0){
                     System.out.println(aux);
-                    System.out.println("000000");
+                  //  System.out.println("000000");
                     estado=Character.getNumericValue(aux.charAt(9))*100+Character.getNumericValue(aux.charAt(10))*10+Character.getNumericValue(aux.charAt(11));
                 }else if(i==3){
                     System.out.println(aux);
-                    System.out.println("33333");
+                  //  System.out.println("33333");
                    // locat=aux.toString();
                 }else if (i==2){
                     System.out.println(aux);
-                    System.out.println("22222");  
+                  //  System.out.println("22222");  
                 }
                 else{
                     System.out.println(aux);
-                    System.out.println("i else "+i+"");                   
+                  //  System.out.println("i else "+i+"");                   
                 }    
             }
             while ((aux = br.readLine()) != null) {
                 if (aux.isEmpty()){
                     count=1;
-                    System.out.println("aux is empty"); 
+                  //  System.out.println("aux is empty"); 
                 }
                 if (count==1){
                     builder.append(aux);
-                    System.out.println("aux append"); 
+                  //  System.out.println("aux append"); 
                 }
                 if (count==0){
                     System.out.println(aux);
                     if (aux.contains("Location")){
-                     
-                     System.out.println(aux);
+                     redirect = true;
+                    // System.out.println(aux);
                       
                      int j = 0;
                      char h = 'h';
@@ -93,6 +96,14 @@ public class Request implements PageHistory{
                      while (aux.charAt(j)!= aux.charAt(aux.length()-1)){
                          if (aux.charAt(j)==h){
                          locat=aux.substring(j);
+                         URL redir = new URL(locat);
+                         this.host=redir.getHost();
+                         this.path=redir.getPath();
+                         
+                         
+                         //Request reconexion=new Request(this.host,this.path);
+                         //Pantalla browser2 = new Pantalla(reconexion.initClient());
+                         
                          }
                      
                      j=j+1;
@@ -101,15 +112,20 @@ public class Request implements PageHistory{
                      System.out.println(locat);
                      System.out.println("viste pedro");
                     }
-                     System.out.println("print aux tt"); 
+                    // System.out.println("print aux tt"); 
                     
                 }
             }
-            
+            if (redirect== false)
             text = builder.toString();
-            System.out.println("print estadi init"); 
+            
+                
+           // System.out.println("AQUI ESTA EL TEXT");
+           // System.out.println(text);
+           // System.out.println("AQUI TERMINA EL TEXT");
+           // System.out.println("print estadi init"); 
             System.out.println(estado);
-            System.out.println("print estadi fin");
+           // System.out.println("print estadi fin");
             sc.close();
             br.close();
         }catch(Exception e ){
@@ -126,6 +142,10 @@ public class Request implements PageHistory{
          
          
         if(estado>=300 && estado<=399){
+            if (redirect== true){
+            Request reconexion=new Request(this.host,this.path);
+            text= reconexion.initClient();
+            }else{
             text="<HTML>\n" +
                 "<HEAD>\n" +
                 "<TITLE>Error "+estado+"</TITLE>\n" +
@@ -133,7 +153,7 @@ public class Request implements PageHistory{
                 "<BODY>\n" +
                 "<P>We are sorry, the page you are trying to load has moved to "+locat +".</P>\n" +
                 "</BODY>\n" +
-                "</HTML>";
+                "</HTML>";}
         }
         if(estado>=400 && estado<=499){
             text="<HTML>\n" +
