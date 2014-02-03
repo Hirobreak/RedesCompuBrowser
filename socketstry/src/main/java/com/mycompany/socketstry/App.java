@@ -9,7 +9,15 @@ public class App implements PageHistory
 {
     public static void main( String[] args ) throws MalformedURLException, IOException
     {
-        URL homepage = new URL("http://sheldonbrown.com/web_sample1.html");
+        URL homepage = new URL("https://www.google.com.ec/?gws_rd=cr&ei=f-_uUozMN4bLkAfd94D4Cg");
+        System.out.println("protocol = " + homepage.getProtocol());
+        System.out.println("authority = " + homepage.getAuthority());
+        System.out.println("host = " + homepage.getHost());
+        System.out.println("port = " + homepage.getPort());
+        System.out.println("path = " + homepage.getPath());
+        System.out.println("query = " + homepage.getQuery());
+        System.out.println("filename = " + homepage.getFile());
+        System.out.println("ref = " + homepage.getRef());
         Request conexion=new Request(homepage.getHost(),homepage.getPath());
         Pantalla browser = new Pantalla(conexion.initClient());
         browser.actual = homepage; browser.homepage = homepage; browser.guardarHist(homepage); browser.addressBar.setText(homepage.toString());
