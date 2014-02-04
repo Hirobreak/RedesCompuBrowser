@@ -27,7 +27,7 @@ import javax.swing.event.HyperlinkListener;
  */
 public class Pantalla extends JFrame implements PageHistory{
     
-    //HTMLEditorKit kit;
+ 
     JEditorPane mostrador;
     JTextField addressBar;
     JButton okButton;
@@ -258,6 +258,8 @@ public class Pantalla extends JFrame implements PageHistory{
         mostrador.setText(r.initClient());
         addressBar.setText(gotoURL.toString());
         actual = gotoURL;
+        r.getCookie(actual);
+        r.setCookie(actual);
         refreshButtons();
     }
     public void refreshButtons(){

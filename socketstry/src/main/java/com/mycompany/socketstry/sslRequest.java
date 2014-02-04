@@ -1,4 +1,7 @@
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.mycompany.socketstry;
 
 import java.io.BufferedReader;
@@ -12,37 +15,144 @@ import java.net.Socket;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.security.Provider;
+import java.security.Security;
+import javax.net.ssl.HandshakeCompletedListener;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
-public class Request implements PageHistory{
+
+public class sslRequest implements PageHistory{
     String contents;
     String host,path;
-    int puerto = 80;
+    int puerto = 443;
     DataOutputStream out;
     DataInputStream in;
     PrintWriter outw;
-    Socket sc;
+    SSLSocket sc;
     boolean redirect= false;
-    Request(String host, String path){
+    
+    
+    sslRequest(String host, String path){
         this.host = host;
         this.path = path;
     }
+    
     public String initClient(){
         String text = null;
         int estado=0;
         String locat=null;
         System.out.println();
          try{
-             
-            sc = new Socket(InetAddress.getByName(host), puerto); /*conectar a un servidor en localhost con puerto 5000*/
+             Security.addProvider( (Provider)Class.forName("com.sun.crypto.provider.SunJCE").newInstance());
+             java.security.Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+            sc = new SSLSocket(InetAddress.getByName(host), puerto) {
+                    
+                @Override
+                public String[] getSupportedCipherSuites() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public String[] getEnabledCipherSuites() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setEnabledCipherSuites(String[] strings) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public String[] getSupportedProtocols() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public String[] getEnabledProtocols() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setEnabledProtocols(String[] strings) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public SSLSession getSession() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void addHandshakeCompletedListener(HandshakeCompletedListener hl) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void removeHandshakeCompletedListener(HandshakeCompletedListener hl) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void startHandshake() throws IOException {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setUseClientMode(boolean bln) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public boolean getUseClientMode() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setNeedClientAuth(boolean bln) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public boolean getNeedClientAuth() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setWantClientAuth(boolean bln) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public boolean getWantClientAuth() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setEnableSessionCreation(boolean bln) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public boolean getEnableSessionCreation() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            }; /*conectar a un servidor en localhost con puerto 5000*/
             outw=new PrintWriter(sc.getOutputStream());  
             System.out.println("URL: "+host+path + " pathlength="+path.length());
-            if (path==""){
-                System.out.println("GET / HTTP/1.1");
-                outw.println("GET / HTTP/1.1");
+            if ("".equals(path)){
+                System.out.println("GET / HTTPS/1.1");
+                outw.println("GET / HTTPS/1.1");
             }
             else{
-                System.out.println("GET "+path+" HTTP/1.1");
-                outw.println("GET "+path+" HTTP/1.1");
+                System.out.println("GET "+path+" HTTPS/1.1");
+                outw.println("GET "+path+" HTTPS/1.1");
             }
             System.out.println("Host: "+host);
             System.out.println("");
@@ -51,7 +161,7 @@ public class Request implements PageHistory{
             outw.println("");
             outw.flush();
             BufferedReader br=new BufferedReader(new InputStreamReader(sc.getInputStream()));
-            StringBuffer builder = new StringBuffer();
+            StringBuilder builder = new StringBuilder();
             String aux = "";
             int count=0;
             for (int i=0; i<4; i++){
@@ -124,7 +234,7 @@ public class Request implements PageHistory{
                          this.path=redir.getPath();
                          
                          
-                         //Request reconexion=new Request(this.host,this.path);
+                         //SSLRequest reconexion=new SSLRequest(this.host,this.path);
                          //Pantalla browser2 = new Pantalla(reconexion.initClient());
                          
                          }
@@ -169,16 +279,8 @@ public class Request implements PageHistory{
          
         if(estado==301){
             if (redirect== true){
-            Request reconexion=new Request(this.host,this.path);
+            sslRequest reconexion=new sslRequest(this.host,this.path);
             text= reconexion.initClient();
-            URL location = null;
-                try {
-                    location = new URL(locat);
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(Request.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            reconexion.getCookie(location);
-            reconexion.setCookie(location);
             }else{
             text="<HTML>\n" +
                 "<HEAD>\n" +
@@ -191,16 +293,8 @@ public class Request implements PageHistory{
         }
         if(estado==302){            
             if (redirect== true){               
-            Request reconexion2=new Request(this.host,this.path);
+            sslRequest reconexion2=new sslRequest(this.host,this.path);
             text= reconexion2.initClient();
-            URL location = null;
-                try {
-                    location = new URL(locat);
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(Request.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            reconexion2.getCookie(location);
-            reconexion2.setCookie(location);
             }
             else{    
             text="<HTML>\n" +
@@ -227,19 +321,23 @@ public class Request implements PageHistory{
         }
         return text;
      }
+    /*
     
-    public void getCookie(URL url) { 
+    public void getCookieUsingCookieHandler(URL url) { 
         try {       
-           
+            // Instantiate CookieManager;
+            // make sure to set CookiePolicy
             CookieManager manager = new CookieManager();
             manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
             CookieHandler.setDefault(manager);
 
-          
+            // get content from URLConnection;
+            // cookies are set by web site
             URLConnection connection = url.openConnection();
             connection.getContent();
 
-           
+            // get cookies from underlying
+            // CookieStore
             CookieStore cookieJar =  manager.getCookieStore();
             List <HttpCookie> cookies = cookieJar.getCookies();
             for (HttpCookie cookie: cookies) {
@@ -249,23 +347,24 @@ public class Request implements PageHistory{
             System.out.println("Unable to get cookie using CookieHandler");
             e.printStackTrace();
         }
-    }
-    public void setCookie(URL url) {
+    }/*
+    public void setCookieUsingCookieHandler(URL url) {
         try {
-            
+            // instantiate CookieManager
             CookieManager manager = new CookieManager();
             CookieHandler.setDefault(manager);
             CookieStore cookieJar =  manager.getCookieStore();
 
-            
-            HttpCookie cookie = new HttpCookie("usuario", "Edison");
+            // create cookie
+            HttpCookie cookie = new HttpCookie("UserName", "John Doe");
 
-            
+            // add cookie to CookieStore for a
+            // particular URL
             cookieJar.add(url.toURI(), cookie);
             System.out.println("Added cookie using cookie handler");
         } catch(Exception e) {
             System.out.println("Unable to set cookie using CookieHandler");
             e.printStackTrace();
         }
-    }
+    }*/
 }
