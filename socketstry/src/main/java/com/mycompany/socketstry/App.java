@@ -9,8 +9,7 @@ public class App implements PageHistory
 {
     public static void main( String[] args ) throws MalformedURLException, IOException
     {
-        URL homepage = new URL("https://www.thepiratebay.org");
-        
+        URL homepage = new URL("https://www.thepiratebay.org");        
         System.out.println("protocol = " + homepage.getProtocol());
         System.out.println("authority = " + homepage.getAuthority());
         System.out.println("host = " + homepage.getHost());

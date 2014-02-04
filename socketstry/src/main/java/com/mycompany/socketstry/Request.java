@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static com.mycompany.socketstry.Pantalla.*;
 
 public class Request implements PageHistory{
     String contents;
@@ -167,6 +168,59 @@ public class Request implements PageHistory{
         }
          
          
+         if(estado==100)
+         {
+              System.out.println("CONTINUE");
+         }
+         if(estado==101)
+         {
+              System.out.println("SWITCHING PROTOCOLS");
+         }
+         if(estado==102)
+         {
+              System.out.println("PROCESSING");
+         }
+         if(estado==200)
+         {
+              System.out.println("OK");
+         }
+         if(estado==201)
+         {
+              System.out.println("CREATED");
+         }
+         if(estado==202)
+         {
+             System.out.println("ACCEPTED");
+         }
+         if(estado==203)
+         {
+              System.out.println("Non-Authoritative Information");
+         }
+         if(estado==204)
+         {
+              System.out.println("No Content");
+         }
+         if(estado==205)
+         {
+              System.out.println("Reset Content");
+         }
+         if(estado==206)
+         {
+              System.out.println("Partial Content");
+         }
+         if(estado==207)
+         {
+              System.out.println("Multi-Status");
+         }
+         if(estado==208)
+         {
+              System.out.println("Already Reported");
+         }
+         if(estado==226)
+         {
+              System.out.println("IM Used");
+         }
+         
         if(estado==301){
             if (redirect== true){
             Request reconexion=new Request(this.host,this.path);
@@ -179,6 +233,7 @@ public class Request implements PageHistory{
                 }
             reconexion.getCookie(location);
             reconexion.setCookie(location);
+            
             }else{
             text="<HTML>\n" +
                 "<HEAD>\n" +
@@ -201,6 +256,7 @@ public class Request implements PageHistory{
                 }
             reconexion2.getCookie(location);
             reconexion2.setCookie(location);
+            //addressBar.setText(locat);
             }
             else{    
             text="<HTML>\n" +

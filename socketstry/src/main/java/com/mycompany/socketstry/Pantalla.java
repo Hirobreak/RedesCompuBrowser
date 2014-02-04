@@ -29,7 +29,7 @@ public class Pantalla extends JFrame implements PageHistory{
     
  
     JEditorPane mostrador;
-    JTextField addressBar;
+    static JTextField addressBar;
     JButton okButton;
     JButton refreshButton;
     JButton backButton;
@@ -238,6 +238,9 @@ public class Pantalla extends JFrame implements PageHistory{
         }
         });
         
+        
+        
+        
         forwardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             if(!url_forward.empty()){
@@ -250,6 +253,11 @@ public class Pantalla extends JFrame implements PageHistory{
         }
         });
     }
+    
+    
+    public void cambiarAddress(String locat){
+        addressBar.setText(locat);
+        }
 
     public void pageGo(URL gotoURL){
         String host = gotoURL.getHost();
