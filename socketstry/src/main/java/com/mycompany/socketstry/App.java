@@ -7,6 +7,13 @@ import java.net.URL;
 
 public class App implements PageHistory
 {
+    /**
+  * Funcion main, donde se establece la homepage y se la inicializa
+  *
+  * @param string que seinicializa con el main
+  * @throws MalformedURLException si al realizar new URL ocurre algun error, 
+  * IOException Si ocurre algun error inesperado
+  */
     public static void main( String[] args ) throws MalformedURLException, IOException
     {
         URL homepage = new URL("https://www.thepiratebay.org");        

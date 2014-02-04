@@ -43,7 +43,9 @@ public class sslRequest implements PageHistory{
         this.host = host;
         this.path = path;
     }
-    
+    /**
+     * Codigo pensado para implementar ssl/tsl
+  */
     public String initClient(){
         String text = null;
         int estado=0;

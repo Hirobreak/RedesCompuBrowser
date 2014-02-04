@@ -22,7 +22,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 /**
- *
+ *Basicamente el Browser tal como interfaz grafica
  * @author user
  */
 public class Pantalla extends JFrame implements PageHistory{
@@ -44,7 +44,13 @@ public class Pantalla extends JFrame implements PageHistory{
     MenuItem mostrarHist = new MenuItem("Mostrar historial");
     MenuItem cerrarBrowser = new MenuItem("Cerrar");
     JPanel panelHist = new JPanel();
-    
+  /**
+  * Funcion constructor que presenta la ventana principal del explorador
+  *
+  * @param recibe un string con formato html para mostrarlo en el jeditorpane 
+  * @throws IOException Si ocurre algun error inesperado
+  * 
+  */
     Pantalla(String str) throws IOException{ 
         actual=null;
         bar=new Panel(new FlowLayout());
@@ -109,25 +115,26 @@ public class Pantalla extends JFrame implements PageHistory{
         ventana.setMenuBar(menu);
         ventana.add(bar, BorderLayout.NORTH);
         ventana.add(scrollPane,BorderLayout.CENTER);
-        
+        //llama a la funcion cambiarHomepage para cambiar la pagina principal
         cambiarHome.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cambiarHomepage(homepage);
             }
         });
-        
+        //Muestra la ventana del historial
         mostrarHist.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 historial.setVisible(true);
             }
         });
-        
+        //cierra el browser
         cerrarBrowser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        
+        //Permite avanzar al url ingresado al dar enter, ademas, agrega el protocolo
+        //http por defecto si no se ha ingresado en el addressbar
         addressBar.addActionListener(
                 new ActionListener(){
                     public void actionPerformed(ActionEvent e){
@@ -154,7 +161,8 @@ public class Pantalla extends JFrame implements PageHistory{
                     }
                 }
         );
-        
+        //agrega la disponibilidad de hyperlinks, asi como la capacidad de obtener
+        //el URL de estos, solicitar la pagina y mostrarla
         mostrador.addHyperlinkListener(
                 new HyperlinkListener(){
                     public void hyperlinkUpdate(HyperlinkEvent e){
@@ -176,7 +184,8 @@ public class Pantalla extends JFrame implements PageHistory{
                     }
                 }
         );
-                
+        //boton que me lleva al url ingresado en la addressbar
+        //maneja MalformedURLException ex para controlar errores al momento de crear el URL
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try{
@@ -198,7 +207,7 @@ public class Pantalla extends JFrame implements PageHistory{
                 }
         }   
         });
-        
+        //Boton que vuelve a cargar la pagina actual en la que me encuentro
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -209,7 +218,7 @@ public class Pantalla extends JFrame implements PageHistory{
             
         }
         });
-        
+        //Accion del boton que me permite abrir la pagina principal
         homeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -225,7 +234,7 @@ public class Pantalla extends JFrame implements PageHistory{
             
         }
         });
-        
+        //Realiza un pop de las paginas del historial almacenadas en una pila
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             if(!url_back.empty()){
@@ -240,7 +249,7 @@ public class Pantalla extends JFrame implements PageHistory{
         
         
         
-        
+        //realiza un pop de las paginas visitadas luego de realizar backs
         forwardButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             if(!url_forward.empty()){
@@ -254,11 +263,20 @@ public class Pantalla extends JFrame implements PageHistory{
         });
     }
     
-    
+    /**
+    * Cambia el texto del addressBar
+    * 
+    * @param String que contiene por lo general una direccion web
+    */
     public void cambiarAddress(String locat){
         addressBar.setText(locat);
         }
-
+    /**
+    * Funcion que, tras recibir un URL, obtiene el host y el path para realizar
+    * un request y luego presentar el html recibido
+    * 
+    * @param URL
+    */
     public void pageGo(URL gotoURL){
         String host = gotoURL.getHost();
         String path = gotoURL.getPath();
@@ -270,6 +288,12 @@ public class Pantalla extends JFrame implements PageHistory{
         r.setCookie(actual);
         refreshButtons();
     }
+      /**
+  * Funcion que habilita o deshabilita botones de acuerdo a la posibilidad de
+  * realizar cierta accion. Por ejemplo si no hay mas url en la lista de los urls
+  * anteriores, el back button se deshabilita.
+  * 
+  */
     public void refreshButtons(){
         if(url_back.empty())
             backButton.setEnabled(false);
@@ -280,7 +304,13 @@ public class Pantalla extends JFrame implements PageHistory{
         else
             forwardButton.setEnabled(true);
     }
-
+  /**
+  * Funcion que un panel al historial donde contendra un boton con el url de la
+  * pagina y la fecha y hora en la que se ingreso a la pagina. Ademas se le
+  * agrega el actionlistener al boton.
+  * 
+  * @param recibe un url que sera colocado en el nombre del boton 
+  */
     public void guardarHist(URL url){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -294,6 +324,12 @@ public class Pantalla extends JFrame implements PageHistory{
         panelHist.add(panel);
     }
     
+  /**
+  * Funcion que agrega al boton del historial un actionlistener, el cual se encarga
+  * de cargar la pagina almacenada en el nombre del boton en el explorador
+  * 
+  * @param recibe un boton(del historial) para agregarle el actionlistener 
+  */
     public void addListenerHistButton(final JButton histButton){
         histButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -317,6 +353,15 @@ public class Pantalla extends JFrame implements PageHistory{
         }
         });
     }
+    
+    
+  /**
+  * Funcion que cambia la homepage del explorador para acceder a ella por medio 
+  * del boton home
+  * Muestra una ventana donde se podra editar el homepage
+  * 
+  * @param recibe un url para establecerlo como direccion a la pagina principal 
+  */
     public void cambiarHomepage(URL home){
         final JFrame cambiarHomepage = new JFrame("Cambiar homepage");
         cambiarHomepage.setSize(600, 100);
@@ -337,6 +382,8 @@ public class Pantalla extends JFrame implements PageHistory{
         panelPrin.add(panelTextField);
         panelPrin.add(panelboton);
         cambiarHomepage.add(panelPrin);   
+        //Crea el actionlistener para editar el url del homepage
+        //Maneja el error MalformedURLException ex si el url no pudo ser creado
         guardar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 try {
@@ -347,6 +394,7 @@ public class Pantalla extends JFrame implements PageHistory{
                 }
             }
         });
+        //Cierra la ventana sin realizar algun cambio
         cancelar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 cambiarHomepage.dispose();

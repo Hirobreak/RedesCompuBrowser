@@ -27,6 +27,14 @@ public class Request implements PageHistory{
         this.host = host;
         this.path = path;
     }
+  /**
+  * Funcion que accede por medio de sockets a la web
+  * Maneja redireccionamiento y muestra errores al no recibir el html
+  * de la pagina solicitada
+  * Maneja y muestra los codigos de estados y devuelve el string que contiene
+  * el codigo html de la pagina
+  *
+  */
     public String initClient(){
         String text = null;
         int estado=0;
@@ -71,19 +79,16 @@ public class Request implements PageHistory{
                          this.path=redir.getPath();
                         System.out.println("location"+locat);
                          //estado= 302;
-                         
                          }
                          j1=j1+1;
                      }
                     // i=4;
                     }
-                
                 if(i==0){
                     System.out.println(aux);
                    // System.out.println("000000");
                     estado=Character.getNumericValue(aux.charAt(9))*100+Character.getNumericValue(aux.charAt(10))*10+Character.getNumericValue(aux.charAt(11));
-                    System.out.println("estado =="+estado);
-                    
+                    System.out.println("estado =="+estado);     
                 }else if(i==3){
                     System.out.println(aux);
                    // System.out.println("33333");
@@ -109,42 +114,31 @@ public class Request implements PageHistory{
                 if (count==0){
                     System.out.println(aux);
                    // System.out.println("aux afuera");
-                    
                     if (aux.contains("Location")&&estado==301){
                      redirect = true;
-                   // System.out.println("aux dentro"); 
-                      
+                   // System.out.println("aux dentro");  
                      int j = 0;
-                     char h = 'h';
-                     
+                     char h = 'h'; 
                      while (aux.charAt(j)!= aux.charAt(aux.length()-1)){
                          if (aux.charAt(j)==h){
                          locat=aux.substring(j);
                          URL redir = new URL(locat);
                          this.host=redir.getHost();
                          this.path=redir.getPath();
-                         
-                         
                          //Request reconexion=new Request(this.host,this.path);
                          //Pantalla browser2 = new Pantalla(reconexion.initClient());
-                         
                          }
-                     
                      j=j+1;
                      }
                      System.out.println("aqui esta"); 
                      System.out.println(locat);
-                     System.out.println("viste pedro");
-                     
+                     System.out.println("viste pedro"); 
                     }
-                    // System.out.println("print aux tt"); 
-                    
+                    // System.out.println("print aux tt");  
                 }
             }
             if (redirect== false)
-            text = builder.toString();
-            
-                
+            text = builder.toString();    
            // System.out.println("AQUI ESTA EL TEXT");
            // System.out.println(text);
            // System.out.println("AQUI TERMINA EL TEXT");
@@ -152,9 +146,7 @@ public class Request implements PageHistory{
             System.out.println(estado);
             System.out.println("print estadi fin");
             sc.close();
-            br.close();
-            
-            
+            br.close();   
         }catch(Exception e ){
             System.out.println("Error: "+e.getMessage());
             text="<HTML>\n" +
@@ -166,8 +158,6 @@ public class Request implements PageHistory{
                 "</BODY>\n" +
                 "</HTML>";
         }
-         
-         
          if(estado==100)
          {
               System.out.println("CONTINUE");
@@ -268,8 +258,7 @@ public class Request implements PageHistory{
                 "</BODY>\n" +
                 "</HTML>";                    
             }
-            }
-            
+        } 
         if(estado==303){ 
            System.out.println("SEE OTHER");
            text="<HTML>\n" +
@@ -352,6 +341,12 @@ public class Request implements PageHistory{
         return text;
      }
     
+      /**
+  * Funcion que toma el cookie de la pagina pasada por el parametro del 
+  * contenedor de cookies
+  *
+  * @param url de la pagina con la que trabaja el cookie
+  */
     public void getCookie(URL url) { 
         try {       
            
@@ -374,6 +369,11 @@ public class Request implements PageHistory{
             e.printStackTrace();
         }
     }
+  /**
+  * Funcion que establece el cookie de la pagina pasada por el parametro
+  *
+  * @param url de la pagina con la que trabaja el cookie
+  */
     public void setCookie(URL url) {
         try {
             
