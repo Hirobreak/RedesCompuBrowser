@@ -270,8 +270,76 @@ public class Request implements PageHistory{
             }
             }
             
+        if(estado==303){ 
+           System.out.println("SEE OTHER");
+           text="<HTML>\n" +
+                "<HEAD>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
+                "</HEAD>\n" +
+                "<BODY>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
+                "</BODY>\n" +
+                "</HTML>";
+        }
         
-        if(estado>=400 && estado<=499){
+        if(estado==400){ 
+           System.out.println("BAD REQUEST");
+           text="<HTML>\n" +
+                "<HEAD>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
+                "</HEAD>\n" +
+                "<BODY>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
+                "</BODY>\n" +
+                "</HTML>";
+        }
+        if(estado==401){ 
+           System.out.println("UNATHORIZED");
+           text="<HTML>\n" +
+                "<HEAD>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
+                "</HEAD>\n" +
+                "<BODY>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
+                "</BODY>\n" +
+                "</HTML>";
+        }
+        if(estado==402){ 
+           System.out.println("PAYMENT REQUIRED");
+           text="<HTML>\n" +
+                "<HEAD>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
+                "</HEAD>\n" +
+                "<BODY>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
+                "</BODY>\n" +
+                "</HTML>";
+        }
+        
+        if(estado==403){ 
+           System.out.println("FORBIDDEN");
+           text="<HTML>\n" +
+                "<HEAD>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
+                "</HEAD>\n" +
+                "<BODY>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
+                "</BODY>\n" +
+                "</HTML>";
+        }
+        
+        if(estado==404){ 
+           System.out.println("NOT FOUND");
+           text="<HTML>\n" +
+                "<HEAD>\n" +
+                "<TITLE>Error "+estado+"</TITLE>\n" +
+                "</HEAD>\n" +
+                "<BODY>\n" +
+                "<P>We are sorry, Error "+estado+", page not found.</P>\n" +
+                "</BODY>\n" +
+                "</HTML>";
+        }
+        if(estado>=405 && estado<=599){
             text="<HTML>\n" +
                 "<HEAD>\n" +
                 "<TITLE>Error "+estado+"</TITLE>\n" +
